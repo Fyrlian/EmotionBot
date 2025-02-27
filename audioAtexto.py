@@ -105,6 +105,9 @@ def detectarEmociones(q):
 
             #calcula el tiempo actual
             current_time = time.time()
+
+            #logica completamente ineficiente. Utilizar max para obtener cual es el mayor valor y punto
+            #jesucristo idea feliz del momento
             
             #si el tiempo es menor que 0.5 y almacena en una lista todos los valores de sentimiento menos el que se va a comparar
             if current_time - last_print_time >= 0.5:
@@ -138,7 +141,9 @@ def detectarEmociones(q):
                     print("El usuario está disgustado")
                     emocion_detectada = 'disgusto'
                 
-                #si hay una emocion
+                #si hay una emocion detectada agrega la nueva emoción y elimina la existente de la cola.
+                #esta logica es completamente mejorable. Condiciones sin sentido
+                
                 if emocion_detectada:
                     with q.mutex:
                         q.queue.clear()  #limpia la cola
@@ -155,6 +160,7 @@ def detectarEmociones(q):
                 total_neutro = 0
                 last_print_time = current_time  #actualiza el tiempo
 
+        #excepciones similares a la condicion if else. codigo MUY optimizable
         except Exception as e:
             print('No se detecta emocion en el frame, es tomara en cuenta neutralidad')
             emocion_detectada = 'neutralidad'
@@ -166,11 +172,12 @@ def detectarEmociones(q):
 
         cv2.imshow('Emotion Detection', frame)
 
-        #se acaba la ejecucion de la funcion si se da a la Q
+        #se acaba la ejecucion de la funcion si se da a la Q. 
+        #se tiene que acabar la ejecución de TODO el programa. No solo del hilo que lanza esta funcion.
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-
+#esta funcion se encarga de grabar audio y parar cuando detecte silencio.
 def grabar_audio_dinamico(nombre_archivo, umbral_silencio=1.0, duracion_buffer=0.5, max_duracion=30):
     
     frecuencia_muestreo = 16000  #frecuencia de muestreo (Hz)
