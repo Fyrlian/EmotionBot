@@ -1,3 +1,4 @@
+#importacion del sistema y de openai
 import os
 import openai
 
@@ -7,6 +8,8 @@ import queue
 #reconocimiento facial
 import cv2
 from fer import FER
+
+#import del tiempo
 import time
 
 #import de variables de entorno
@@ -40,16 +43,17 @@ load_dotenv()
 
 #clave openai
 #openai.api_key = 'AQUI_TU_CLAVE_API_OPENAI'
-openai.api_key = os.getenv('OPENAI_API_KEY') #o usala como variable de entorno
+openai.api_key = os.getenv('OPENAI_API_KEY') #o usala como variable de entorno llamada OPENAI_API_KEY o de otra forma pero cambiando este valor entonces
 
 
 #carga el modelo y el tokenizador
-model_name = "microsoft/DialoGPT-medium"  #Puedes usar "DialoGPT-small", "DialoGPT-medium", o "DialoGPT-large"
+model_name = "microsoft/DialoGPT-medium"  #se puede usar "DialoGPT-small", "DialoGPT-medium", o "DialoGPT-large"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
-#mueve el modelo a la GPU si está disponible
+#mueve el modelo a la GPU si está disponible y sino usa la cpu (este segundo caso sera menos optimo)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#asigna al modelo este dispositivo utilizado
 model.to(device)
 
 pygame.mixer.init() #Inicia el mixer
@@ -193,6 +197,7 @@ def grabar_audio_dinamico(nombre_archivo, umbral_silencio=1.0, duracion_buffer=0
     tiempo_silencio = 0  #contador de cuánto tiempo ha habido silencio
     duracion_total = 0   #contador de la duración total de la grabación
 
+    #mientras que no haya silencio durante 2 segundos
     while not silencio_detectado and duracion_total < max_duracion:
         #graba un buffer de duracion_buffer segundos (0.5)
         buffer = sd.rec(int(duracion_buffer * frecuencia_muestreo), samplerate=frecuencia_muestreo, channels=1, dtype='float32')
