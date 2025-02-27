@@ -310,6 +310,8 @@ def generadorDeRespuesta(q):
         messages.append({"role": "assistant", "content": content})
         
         #si el mensaje del usuario es adiós se acaba el programa
+        #agregar al prompt del sistema que si detecta algun tipo de despedida siempre contenga en su respuesta la palabra adiós.
+        #cambiar la logica del programa para que acabe si el sistema contiene la palabra adios.
         if texto.lower() == 'adiós':
             break
 
